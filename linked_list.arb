@@ -1,0 +1,99 @@
+class LinkedList
+    attr_accessor :full_list
+
+    def initialize
+        @full_list = []
+    end
+        
+    def append(value = nil, next_node = nil)
+        new_node = Node.new(value, next_node)
+        @full_list.append(new_node)
+    end
+
+    def prepend(value = nil, next_node = nil)
+        new_node = Node.new(value, @full_list[0])
+        @full_list.unshift(new_node)
+    end
+
+    def size
+        @full_list.length
+    end
+
+    def head
+        @full_list[0]
+    end
+
+    def tail
+        @full_list[-1]
+    end
+
+    def at(index)
+        @full_list[index]
+    end
+
+    def pop
+        @full_list.pop
+    end
+
+    def contains?(value)
+        @full_list.each do |node|
+            if node.value.value == value
+                return true
+            end
+        end 
+        false
+    end
+
+    def find(value)
+        @full_list.each do |node|
+            if node.value.value == value
+                return @full_list.index(node)
+            end
+        end 
+        nil
+    end
+
+    def to_s
+        @full_list.each do |node|
+            print "(#{node.value.value}) -> "
+        end
+        print "nil"
+        puts
+    end
+        
+end
+
+class Node 
+    attr_accessor :value, :next_node
+
+    def initialize(value = nil, next_node = nil)
+        @value = value 
+        @next_node = next_node
+    end
+end
+
+new_list = LinkedList.new
+p new_list.full_list
+new_node = Node.new(7)
+new_list.append(new_node)
+p new_list.full_list
+new_node_2 = Node.new(9)
+new_list.prepend(new_node_2)
+new_node_3 = Node.new(258)
+new_list.append(new_node_3)
+p "final"
+p new_list.full_list
+p "size"
+p new_list.size
+p "head"
+p new_list.head
+p "tail"
+p new_list.tail
+p "index at 1"
+p new_list.at(1)
+p "contains?"
+p new_list.contains?(7)
+p "find"
+p new_list.find(9)
+p "to_s"
+new_list.to_s
