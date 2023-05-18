@@ -1,0 +1,121 @@
+#Credit to scheals 
+#I didn't use the linked_list definition and instead created a Ruby array to traverse through the nodes.
+#After looking at the submission from scheals, I decided to follow scheals' code as an exercise to better my understanding.
+
+class Node
+    attr_accessor :value, :next_node
+
+    def initialize(value = nil, next_node = nil)
+        @value = value
+        @next_node = next_node
+
+class LinkedList
+    attr_accessor :head
+
+    #initialization only instantiates a nil value for head since a linked list must begin at the head.
+    def initialize
+        @head = nil
+    end
+
+    #A node that holds a value and the address of the next node is created, no other information is contained.
+    def create_node(value = nil, next_node = nil)
+        Node.new(value, next_node)
+    end
+
+    #From newly initialized LinkedList class, a list must begin with a node which will be the head.
+    def begin_list(value)
+        self.head = create_node(value)
+    end
+
+    #tail node utilizes recursivity to go to the end of the linked list
+    def tail(node = head)
+        return node if last_node?(node)
+        tail(node.next_node)
+    end
+
+    #last_node? returns nil if the node's next_node is nil.
+    def last_node?(node)
+        return true if node.next_node.nil?
+        false
+    end
+
+    #appends to the linked list by updating the tail's next_node to point at the node being appended.
+    def append(value)
+        return begin_list(value) if head.nil?
+
+        tail.next_node = create_node(value)
+    end
+
+    #swap head method updates the linked list's head to a new node then points the next_node attribute to the former head.
+    def swap_head(value)
+        self.head = create_node(value, head)
+    end
+
+    #prepend method swaps the head by invoking the swap_head method
+    def prepend(value)
+        return begin_list(value) if head.nil?
+        swap_head(value)
+    end
+
+    #size method utilizes recursivity by using an accumulator variable 'counter'. Every time the method
+    #is called onto itself again, the counter is added 1. Each time it jumps from one node to another,
+    #the counter increases by 1.
+    def size(node = head, counter = 1)
+        return counter if last_node?(node)
+        size(node.next_node, counter + 1)
+    end
+
+    #pop method removes the last node from the linked list by using recursivity. When the method reaches
+    #the second-to-last node, it changes its 'next_node' attribute to 'nil', effectively cutting the 
+    #last node from the linked list.
+    def pop(node = head)
+        return node.next_node = nil if last_node?(node.next_node)
+        pop(node.next_node)
+    end
+
+    #contains? method again uses recursivity to traverse the node tree.
+    def contains?(value, node = head)
+        return true if node.value == value
+        return false if last_node?(node)
+        contains?(value, node.next_node)
+    end
+
+    #The following methods use recursivity to traverse through the nodes and an accumulator variable.
+    def at(index, node = head, counter = 0)
+        return node if index == counter
+        return nil if last_node?(node)
+        at(index, node.next_node, index + 1)
+    end
+
+    def find(value, node = head, index = 0)
+        return index if node.value == value
+        return nil if last_node?(node)
+        find(value, node.next_node, index + 1)
+    end
+
+    def to_s(node = head, string = '')
+        return string += "( #{node.value} ) -> nil" if last_node?(node)
+        string += "( #{node.value} ) ->"
+        to_s(node.next_node, string)
+    end
+
+    #Insert_at method traverses through the node tree using the accumulator variable then when the value
+    #of the accumulator variable reaches the desired index, it then switches the next_node attribute of the 
+    #(n-1) location to a new node that's being inserted.
+    def insert_at(index, value, counter = 0) 
+        return 'Unreachable Index!' if at(index).nil?
+        return swap_head(value) if index.zero?
+        return at(index-1).next_node = create_node(value, at(index)) if index == counter
+        insert_at(index, value, counter + 1)
+    end
+
+    #Like the insert_at method, it again uses recursivity and accumulator variable to traverse the node tree.
+    #It then reassigns the next_node attribute of the node at(n-1) as the node at (n+1), effectively cutting
+    #the ties that used to link the target node to the rest of the tree
+    def remove_at(index, counter = 0)
+        return 'Unreachable index!' if at(index).nil?
+        return self.head = at(1) if index.zero?
+        return at(index - 1).next_node = at(index + 1) if index == counter
+        remove_at(index, counter + 1)
+    end
+end
